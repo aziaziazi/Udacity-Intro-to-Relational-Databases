@@ -52,7 +52,8 @@ Bad: we can't know in advence how many food colums there will be
 | brown bear | fish    | meat    | plants |
 | orangutan  | plants  | insects |        |
 
-Bad: we can't use `count` and others agregations
+Bad: we can't use `count` and others agregations.
+
 *diet*
 
 | species    | food               |
@@ -108,7 +109,9 @@ select 2+2, 4+4, 6+6
 
 ## Related Table
 We can use databas to `join` the tables together and look up the data whe want.
+
 *pictures*
+
 | id | name    | filename           |
 |:---|:--------|:-------------------|
 | 1  | Fluffy  | fluffsocute.jpg    |
@@ -116,6 +119,7 @@ We can use databas to `join` the tables together and look up the data whe want.
 | 3  | George  | george.jpg         |
 
 *votes*
+
 | left | right | winner |
 |:-----|:------|:-------|
 | 2    | 3     | 3      |
@@ -126,6 +130,7 @@ We can use databas to `join` the tables together and look up the data whe want.
 | 2    | 3     | 3      |
 
 *joined*
+
 | left_name | right_name | winner_name |
 |:----------|:-----------|:------------|
 | Monster   | George     | George      |
