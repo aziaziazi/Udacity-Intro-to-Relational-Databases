@@ -43,7 +43,9 @@ COUNT Species =>
 
 ## Table Structure
 Bad: we can't know in advence how many food colums there will be
+
 *diet*
+
 | species    | food 1  | food 2  | food 3 |
 |:-----------|:--------|:--------|:-------|
 | llama      | plants  |         |        |
@@ -52,6 +54,7 @@ Bad: we can't know in advence how many food colums there will be
 
 Bad: we can't use `count` and others agregations
 *diet*
+
 | species    | food               |
 |:-----------|:-------------------|
 | llama      | plants             |
@@ -59,7 +62,9 @@ Bad: we can't use `count` and others agregations
 | orangutan  | plants, insects    |
 
 There's often several same values in one row, and it's not a bad practice. We shoud do that:
+
 *diet*
+
 | species    | food    |
 |:-----------|:--------|
 | llama      | plants  |
