@@ -165,20 +165,61 @@ from animals join diet
 where food = 'fish';
 
 -- The result will be a 2r/1c table:
+
 count
 ---
 20
 ```
 
-##
-
-
-
-
 # Lesson 2: Elements of SQL
+
+https://udacity.atlassian.net/wiki/display/BENDH/RDB+Lesson+2+Reference+Notes
 - Begin learning SQL, the Structured Query Language used by most relational databases.
 - Learn about the select and insert statements, the basic operations for reading and writing data.
 - Learn about the operators and syntax available to get the database to scan and join tables for you.
+
+## Types in SQL
+There are a lot of types in SQL for many purposes. They even differ from one database to another. For exemple there's many way to declare a string or an integer.
+To beggin I can use `text`, `int`, `date`. Be carrefull if I need the quote or not (depending on the type).
+
+## Select Where
+
+basic fetch of datas:
+```sql
+select -- keyword to fetch data out of the database
+    name, birthdate -- wich columns to see in the result
+from -- what table they come from
+    animals
+Where -- restriction
+    species = 'gorilla';
+```
+
+## Booleans and Comparaisons
+We can use Booleans **and**, **not** and **or**. The three next exemple returns the same:
+
+```sql
+-- 1
+select name from animals where
+    (not species = 'gorilla') and (not name ='Max');
+
+-- 2
+select name from animals where
+    not (species = 'gorilla' or name ='Max');
+
+-- 3
+select name from animals where
+    species != 'gorilla' and name !='Max';
+```
+
+I also can use comparaison operators pretty much the same way as in Python, expect == is =
+
+## Introspection
+SQL is very bad at listing it's own structure (table, columns name and colums type)! Each database has it's own implementation, often from the database console and not inside itself.
+
+https://classroom.udacity.com/courses/ud197/lessons/3423258756/concepts/33885287050923
+
+
+
 
 
 # Lesson 3: Python DB-API
