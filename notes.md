@@ -248,6 +248,25 @@ ORDER BY column1, column2 # Sort by 'column1' first, then by 'column2'
 GROUP BY column # return one row by distinct value in 'column'. Beware that it change the behavior of MAX, COUNT and SUM
 ```
 
+Return each species and the numbers of animals of each. Sort them with in first the species that have the most animals:
+```sql
+SELECT species, count(*) as num # Columns to show
+    FROM animals # Tables to search
+    GROUP BY species # Aggregation
+    ORDER BY num DESC # Sorting
+```
+
+## Insertion
+
+To insert a row in my table, I use `ÌNSERT`.
+
+```sql
+# Automatic insertion if the values are in the same order as table's column.
+INSERT INTO table values ("stuff", 42):
+
+# Specifying which value goes in which column.
+INSERT INTO table (col2, col1) values (42, "stuff"):
+```
 
 # Lesson 3: Python DB-API
 - Learn how to access a relational database from Python code.
