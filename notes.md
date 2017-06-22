@@ -80,7 +80,7 @@ Then we can make a query on it. A query always returns a table:
 ```sql
 select food from diet where species = 'orangutan'
 
---> 2rows/1column
+# 2rows/1column
 food
 ---
 plants
@@ -91,7 +91,7 @@ Even if we ask a simple calcul to the database, it will return an one row/ one c
 ```sql
 select 2+2 as sum
 
---> 1row/1column
+# 1row/1column
 sum
 ---
 4
@@ -100,7 +100,7 @@ sum
 ```sql
 select 2+2, 4+4, 6+6
 
---> 1rows/3columns
+# 1rows/3columns
 ?columns? | ?columns? | ?columns? |
 -----------------------------------
 4         | 8         | 12        |
@@ -161,10 +161,10 @@ Here's an exemple of how to retrieve the number of animals eating fish in the pr
 ```sql
 select animals.name, animals.species, diet.food
 from animals join diet
-    on animal.species = diet.species -- statement to specify how to match up the rows from one table to the rows of the other one
+    on animal.species = diet.species # statement to specify how to match up the rows from one table to the rows of the other one
 where food = 'fish';
 
--- The result will be a 2r/1c table:
+# The result will be a 2r/1c table:
 
 count
 ---
@@ -185,12 +185,13 @@ To beggin I can use `text`, `int`, `date`. Be carrefull if I need the quote or n
 ## Select Where
 
 basic fetch of datas:
+
 ```sql
-select -- keyword to fetch data out of the database
-    name, birthdate -- wich columns to see in the result
-from -- what table they come from
+select # keyword to fetch data out of the database
+    name, birthdate # wich columns to see in the result
+from # what table they come from
     animals
-Where -- restriction
+Where # restriction
     species = 'gorilla';
 ```
 
@@ -198,28 +199,54 @@ Where -- restriction
 We can use Booleans **and**, **not** and **or**. The three next exemple returns the same:
 
 ```sql
--- 1
+# 1
 select name from animals where
     (not species = 'gorilla') and (not name ='Max');
 
--- 2
+# 2
 select name from animals where
     not (species = 'gorilla' or name ='Max');
 
--- 3
+# 3
 select name from animals where
     species != 'gorilla' and name !='Max';
 ```
 
-I also can use comparaison operators pretty much the same way as in Python, expect == is =
+I also can use comparaison operators pretty much the same way as in Python, expect `==` is `=`.
 
 ## Introspection
-SQL is very bad at listing it's own structure (table, columns name and colums type)! Each database has it's own implementation, often from the database console and not inside itself.
+SQL is very bad at listing it's own structure (table, columns name and colums type)! But there's tools, each database has it's own implementation (often from the database console and not inside itself).
 
-https://classroom.udacity.com/courses/ud197/lessons/3423258756/concepts/33885287050923
+## Experimentation
 
+Experiment page and Zoo database reference:
+https://classroom.udacity.com/courses/ud197/lessons/3423258756/concepts/33885287060923
 
+An exemple where I join multiple tables and display their datas while grouping and ordering:
+ 
+```sql
+SELECT COUNT(animals.species) as num, animals.species as "specie", taxonomy.t_order as "taxonomy order", ordernames.name as "order name"
+FROM animals JOIN taxonomy, ordernames
+ON (animals.species = taxonomy.name) and (taxonomy.t_order = ordernames.t_order)
+GROUP BY animals.species
+ORDER BY "order name" ASC
+```
 
+## SELECT clauses
+
+Modifyers I can add in the SELECT statement:
+
+```sql
+LIMIT count # only return the 'count' first rows
+LIMIT count OFFSET skip # return 'count' rows starting at the 'skip' one.
+
+ORDER BY column # Sort the rows by 'colums' value order
+ORDER BY column ASC # same as ORDER BY
+ORDER BY  column DESC  # Reverse sorting
+ORDER BY column1, column2 # Sort by 'column1' first, then by 'column2'
+
+GROUP BY column # return one row by distinct value in 'column'. Beware that it change the behavior of MAX, COUNT and SUM
+```
 
 
 # Lesson 3: Python DB-API
