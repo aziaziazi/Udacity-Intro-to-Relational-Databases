@@ -257,16 +257,28 @@ SELECT species, count(*) as num # Columns to show
 ```
 
 ## Insertion
-
 To insert a row in my table, I use `ÌNSERT`.
 
 ```sql
 # Automatic insertion if the values are in the same order as table's column.
-INSERT INTO table values ("stuff", 42):
+INSERT INTO table VALUES ("stuff", 42):
 
 # Specifying which value goes in which column.
-INSERT INTO table (col2, col1) values (42, "stuff"):
+INSERT INTO table (col2, col1) VALUES (42, "stuff"):
 ```
+
+## HAVING: After Aggregating
+`where` applies to the rows *before* aggregation. Sometime I need to restrict with aggragated rows like COUNT() results, MAX or SUM. I should give this result a name with AS, and us `having` to aggregate on it.
+Subselect can also do the job.
+
+For exemple if I have a store and I want ot find all the items that have more sold than five units:
+```sql
+select name,
+    count(*) as num
+    from sales
+    having num > 5;
+```
+
 
 # Lesson 3: Python DB-API
 - Learn how to access a relational database from Python code.
