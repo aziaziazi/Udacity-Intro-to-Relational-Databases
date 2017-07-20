@@ -334,6 +334,88 @@ git checkout -b dev origin/dev
 ## PSQL basic commands
 https://classroom.udacity.com/courses/ud197/lessons/3483858580/concepts/35153985420923
 
+## Attacks
+### Bobby Tables
+http://bobby-tables.com/
+
+I should be carefull that come inputs may break my databases:
+`'` or `"` may produce an error
+`'); delete from posts; --` may delete all content!
+
+I can prevent that by using the right syntax:
+```sql
+# BAD: input is inserted and interpreted
+cur.execute("INSERT INTO posts VALUES ('%s')" % content)
+
+# GOOD: input is inserted safely as a string
+cur.execute("INSERT INTO posts VALUES (%s)", (content,))
+```
+
+### Script Injetion
+
+Some inputs are not dangerous for the database itself but can execute dangerous script when rendered in the browser:
+```html
+<script>
+setTimeout(function() {
+    var tt = document.getElementById('content');
+    tt.value = "<h2 style='color: #FF6699; font-family: Comic Sans MS'>Spam, spam, spam, spam,<br>Wonderful spam, glorious spam!</h2>";
+    tt.form.submit();
+}, 2500);
+</script>
+```
+**Bleach** is a library to escape html code:
+http://bleach.readthedocs.io/en/latest/
+
+- **Input sanitization** : clean before storing in the BD. That way, any app/interface that use the database are protected without worring.
+- **Output sanitization** : clean after storing in the DB. That way, I keep accurate record of what users sent. It's also necessary if I *already have* dangerous datas in my DB.
+
+Perhaps the best way is to do both. To keep the accurate record, I could use one BD for raws data and one for sanitize one.
+
+## Update
+The `UPDATE` command update values in the database. I can use the `WHERE` clause to select the rows to update. If i leave it empty, all raws will be updated.
+
+```sql
+UPDATE table
+    SET column = value
+    WHERE restriction;
+```
+*Restriction* can be `content = '<script>DANGEROUS</script'` but it's painfull because we have to target each content precisely.
+We can use the `like` operator with `%` to target content that include what we search for:
+`content like '%<script>%'` will target all values that include `<script>`.
+
+### %
+The `%` means "anything", like the `.*` in regex or `*` in uniw shell.
+
+```sql
+| fish   |
+|--------|
+| salmon |
+
+TRUE
+fish like 'salmon'
+fish like 'salmon%'
+fish like 'sal%'
+fish like '%n'
+fish like 's%n'
+fish like '%al%'
+fish like '%'
+fish like '%%%'
+
+FALSE
+fish like 'carp'
+fish like 'salmonella'
+fish like '%b%'
+fish like 'b%'
+fish like ''
+```
+
+## Delete
+
+```sql
+DELETE from table
+    WHERE restriction
+```
+
 
 # Lesson 4: Deeper Into SQL
 - Learn how to design and create new databases.

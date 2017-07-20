@@ -1,7 +1,7 @@
 # "Database code" for the DB Forum.
 
 import psycopg2
-
+import bleach
 
 def get_posts():
   conn = psycopg2.connect("dbname=forum")
@@ -13,7 +13,8 @@ def get_posts():
 def add_post(content):
   conn = psycopg2.connect("dbname=forum")
   cur = conn.cursor()
-  cur.execute("INSERT INTO posts VALUES (%s)" % content)
+  cur.execute("INSERT INTO posts VALUES (%s)",
+              (bleach.clean(content),))
 
   conn.commit()
   cur.close()
