@@ -285,6 +285,56 @@ select name,
 - Use a virtual machine (VM) to run a Python web application with a database.
 - Common security pitfalls of database applications, including the famous Bobby Tables.
 
+## Running a Virtual Machine
+https://classroom.udacity.com/courses/ud197/lessons/3423258756/concepts/14c72fe3-e3fe-4959-9c4b-467cf5b7c3a0
+[Virtual box](https://www.virtualbox.org/wiki/Downloads) is tool to run a virtual machine.
+[Vagrant](https://www.vagrantup.com/) is a tool to ease the configuration of a virtual machine and re-run the same environement on different systems. I can compare it to docker, but with an entire virtual machine.
+
+## Python DB-API
+DB-API is a standart to connect python and a database library. There's a lot of differents libraries for differents databases that follow this standart, and adapting code from one to another is straitfoward. The standart specifies what function I cal to:
+- connect to a database
+- send queries
+- get results
+
+Databases and Libraries (= DB-API module) has sometimes a quite different names:
+
+| BD System  | DB-API mudule   |
+|:-----------|:----------------|
+| SQLite     | sqlite3         |
+| PostgreSQL | psycopg2        |
+| ODBC       | pyodbc          |
+| MySQL      | mysql.connector |
+
+## DB-API flow
+I usually need to follow the same flow anytime I use DB-API:
+
+```python
+import sqlite3 # Import the database library
+
+conn = sqlite3.connect("Cookies") # Connect to the database. Here we connect to *Cookies*: Chrome and firefox use SQLite to store their cookies and web history. If I use a network, I need to specify here the hostname, username, password...
+
+cursor = conn.cursor() # use the *connection* object to create a *cursor* that actually run the queries and fetches the results.
+
+cursor.execute("SELECT host_key FROM cookies LIMIT 10") # use the *cursor* to run a query
+
+results = cursor.fetchall() # use the *cursor* to fetch the results
+
+connection.commit() # if I hadve performed an *INSERT*
+# or
+connection.rollback() # if I have performed an *INSERT*
+
+print results #
+
+conn.close() # Good to always close the connection to free memory, especially if the code is run in a loop!
+```
+
+git checkout --track origin/dev
+git checkout -b dev origin/dev
+
+## PSQL basic commands
+https://classroom.udacity.com/courses/ud197/lessons/3483858580/concepts/35153985420923
+
+
 # Lesson 4: Deeper Into SQL
 - Learn how to design and create new databases.
 - Learn about normalized design, which makes it easier to write effective code using a database.
