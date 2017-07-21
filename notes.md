@@ -383,7 +383,8 @@ UPDATE table
 We can use the `like` operator with `%` to target content that include what we search for:
 `content like '%<script>%'` will target all values that include `<script>`.
 
-### %
+### % selector
+
 The `%` means "anything", like the `.*` in regex or `*` in uniw shell.
 
 ```sql
@@ -421,3 +422,83 @@ DELETE from table
 - Learn how to design and create new databases.
 - Learn about normalized design, which makes it easier to write effective code using a database.
 - Learn how to use the SQL join operators to rapidly connect data from different tables.
+
+## Normalization
+http://www.bkent.net/Doc/simple5.htm
+
+Normalization is the process of organizing columns and tables to achieve these goals:
+- Improve data integrity
+- Reduce redondancy
+- Have the optimum structure
+
+In a **normalized** DB, the relashionships among the tables match the relationships that are really there among the data.
+
+### Guidlines
+#### Every row has the same number of columns
+In practice, the database system won't let us *literally* have different numbers of columns in different rows. But if we have columns that are sometimes empty (null) and sometimes not, or if we stuff multiple values into a single field, we're bending this rule.
+
+**BAD** because some columns are empty and that can cause problems in operations. Also, two columns for the same meaning *major*. Also, if we want to add other majors we have to change the table structure
+| Student ID | Major 1 | Major 2 |
+|------------|---------|---------|
+| 11111      | Math    |         |
+| 22222      | Bio     |         |
+| 33333      | Math    | Bio     |
+
+**GOOD**
+| Student ID | Major 1 |
+|------------|---------|
+| 11111      | Math    |
+| 22222      | Bio     |
+| 33333      | Math    |
+| 33333      | Bio     |
+
+#### There is a unike *key*, and everything in a raw says something about the key
+The "unike key" may be one column or multiple column, we call it *composite*. It even can be the whole row. But we shouldn't duplicate single ID, composite ID of whole row is a table.
+
+More importantly, if we are storing non-unique facts — such as people's names — we distinguish them using a unique identifier such as a serial number. This makes sure that we don't combine two people's grades or parking tickets just because they have the same name.
+
+**BAD** because *Warehouse-Address* is a fact about *Warehouse*, not about *Part*
+| PART | WAREHOUSE | Quantity | Warehouse-Address |
+|------|-----------|----------|-------------------|
+
+**GOOD**
+| PART | WAREHOUSE | Quantity |
+|------|-----------|----------|
+
+| WAREHOUSE | Warehouse-Address |
+|-----------|-------------------|
+
+*Note : If the key is composite, this rules is: "A non-key field is a fact about the composite keys, not a subset of them, i.e. one of them"* 
+
+#### Facts that don't relate to the key belong in different tables
+The example here is has *Employee*, their *departement*, and the *departement*'s *location*. The *lcoation* isn't a fact about the *Employee*; it's a fact about the *Departement*. Moving it to a separate table saves space and reduces ambiguity, and we can always reconstitute the original table using a join.
+
+**BAD**
+| EMPLOYEE | Department | Location |
+|----------|------------|----------|
+
+**GOOD**
+| EMPLOYEE | Department |
+|----------|------------|
+
+| DEPARTMENT | Location |
+|------------|----------|
+
+#### Tables shouldn't imply relationships that don't exist
+There should be relationships in any columns. Below *BAD* exemple make look like *Skills* and *Language* has something to do together. In fact there isn't any relation, so we should spleet the tables.
+
+**BAD** because there isn't any relationship between Skill and Language, but filling the table will assiciate them in the same rows.
+| Employee | Skill | Language |
+|----------|-------|----------|
+
+**GOOD**
+| Employee | Skill |
+|----------|-------|
+
+| Employee | Language |
+|----------|----------|
+
+### Denormalization
+It's an approach to making DB queries faster by avoiding joins. Modern advenced DB as **PostgreSQL** can meet the same goals  using tools as *Indexes* and *Materialized Views*.
+
+
