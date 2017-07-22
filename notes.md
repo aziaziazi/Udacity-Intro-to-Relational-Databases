@@ -161,8 +161,8 @@ Here's an exemple of how to retrieve the number of animals eating fish in the pr
 ```sql
 select animals.name, animals.species, diet.food
 from animals join diet
-    on animal.species = diet.species # statement to specify how to match up the rows from one table to the rows of the other one
-where food = 'fish';
+  on animal.species = diet.species # statement to specify how to match up the rows from one table to the rows of the other one
+  where food = 'fish';
 
 # The result will be a 2r/1c table:
 
@@ -190,9 +190,9 @@ basic fetch of datas:
 select # keyword to fetch data out of the database
     name, birthdate # wich columns to see in the result
 from # what table they come from
-    animals
+animals
 Where # restriction
-    species = 'gorilla';
+species = 'gorilla';
 ```
 
 ## Booleans and Comparaisons
@@ -201,15 +201,15 @@ We can use Booleans **and**, **not** and **or**. The three next exemple returns 
 ```sql
 # 1
 select name from animals where
-    (not species = 'gorilla') and (not name ='Max');
+(not species = 'gorilla') and (not name ='Max');
 
 # 2
 select name from animals where
-    not (species = 'gorilla' or name ='Max');
+not (species = 'gorilla' or name ='Max');
 
 # 3
 select name from animals where
-    species != 'gorilla' and name !='Max';
+species != 'gorilla' and name !='Max';
 ```
 
 I also can use comparaison operators pretty much the same way as in Python, expect `==` is `=`.
@@ -223,13 +223,13 @@ Experiment page and Zoo database reference:
 https://classroom.udacity.com/courses/ud197/lessons/3423258756/concepts/33885287060923
 
 An exemple where I join multiple tables and display their datas while grouping and ordering:
- 
+
 ```sql
 SELECT COUNT(animals.species) as num, animals.species as "specie", taxonomy.t_order as "taxonomy order", ordernames.name as "order name"
-FROM animals JOIN taxonomy, ordernames
-ON (animals.species = taxonomy.name) and (taxonomy.t_order = ordernames.t_order)
-GROUP BY animals.species
-ORDER BY "order name" ASC
+  FROM animals JOIN taxonomy, ordernames
+  ON (animals.species = taxonomy.name) and (taxonomy.t_order = ordernames.t_order)
+  GROUP BY animals.species
+  ORDER BY "order name" ASC
 ```
 
 ## SELECT clauses
@@ -251,13 +251,13 @@ GROUP BY column # return one row by distinct value in 'column'. Beware that it c
 Return each species and the numbers of animals of each. Sort them with in first the species that have the most animals:
 ```sql
 SELECT species, count(*) as num # Columns to show
-    FROM animals # Tables to search
-    GROUP BY species # Aggregation
-    ORDER BY num DESC # Sorting
+  FROM animals # Tables to search
+  GROUP BY species # Aggregation
+  ORDER BY num DESC # Sorting
 ```
 
-## Insertion
-To insert a row in my table, I use `ÌNSERT`.
+    ## Insertion
+    To insert a row in my table, I use `ÌNSERT`.
 
 ```sql
 # Automatic insertion if the values are in the same order as table's column.
@@ -274,9 +274,9 @@ Subselect can also do the job.
 For exemple if I have a store and I want ot find all the items that have more sold than five units:
 ```sql
 select name,
-    count(*) as num
-    from sales
-    having num > 5;
+count(*) as num
+from sales
+having num > 5;
 ```
 
 
@@ -356,11 +356,11 @@ cur.execute("INSERT INTO posts VALUES (%s)", (content,))
 Some inputs are not dangerous for the database itself but can execute dangerous script when rendered in the browser:
 ```html
 <script>
-setTimeout(function() {
+  setTimeout(function() {
     var tt = document.getElementById('content');
     tt.value = "<h2 style='color: #FF6699; font-family: Comic Sans MS'>Spam, spam, spam, spam,<br>Wonderful spam, glorious spam!</h2>";
     tt.form.submit();
-}, 2500);
+  }, 2500);
 </script>
 ```
 **Bleach** is a library to escape html code:
@@ -376,8 +376,8 @@ The `UPDATE` command update values in the database. I can use the `WHERE` clause
 
 ```sql
 UPDATE table
-    SET column = value
-    WHERE restriction;
+  SET column = value
+  WHERE restriction;
 ```
 *Restriction* can be `content = '<script>DANGEROUS</script'` but it's painfull because we have to target each content precisely.
 We can use the `like` operator with `%` to target content that include what we search for:
@@ -414,7 +414,7 @@ fish like ''
 
 ```sql
 DELETE from table
-    WHERE restriction
+  WHERE restriction
 ```
 
 
@@ -501,4 +501,59 @@ There should be relationships in any columns. Below *BAD* exemple make look like
 ### Denormalization
 It's an approach to making DB queries faster by avoiding joins. Modern advenced DB as **PostgreSQL** can meet the same goals  using tools as *Indexes* and *Materialized Views*.
 
+## CREATE database
+First I need to creane a DB and give it a name
 
+```sql
+```
+
+## CREATE database, tables and Types
+
+```sql
+# First I need to create a DB
+CREATE DATABASE dbName [options]
+
+# Connect to a database in psql
+\c dbName
+
+# I can delete it if I'm not connected to it
+DROP DATABASE dbName [options]
+
+# Create a table
+CREATE TABLE tableName (
+  column1 type [constraints],
+  column2 type [constraints],
+  column3 type [constraints],
+  [row constraints])
+
+# Delete a table
+DROP TABLE tableName [options]
+```
+
+I gave a name of the table, the name of each columns and the type of each columns. I aslo can set constraints on each columns and on the row as a whole.
+
+There's a ton of different types. Some DB have a lot, others have few. When the desired type isn't available I can use another one instead usually `string` or `integer`.
+
+Normally, creating the DB is done upfront as part of the installation procedure. It's not cummon at all to send `CREATE TABLE` commands from my app code, even if it's technically possible.
+
+### Primary Keys
+A primary key ensure we can uniquely identify each columns. It also define what the table datas are about. I should define myself the primary keys I want. Then if i try to insert a row that duplicate a primary key, psql will throw an error (and I'll have to rollback()).
+
+Unique column for primary key : put `primary key` after the column definition:
+```sql
+CREATE TABLE students (
+  id serial primary key,
+  name text,
+  birthdate text,
+)
+```
+
+Multiple columns for primary key : use `primary key` followed by the columns name at the end of the table definition:
+```sql
+CREATE TABLE postalPlaces (
+  postalCode integer,
+  country text,
+  name text,
+  primary key (postalCode, country)
+)
+```
