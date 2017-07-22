@@ -557,3 +557,32 @@ CREATE TABLE postalPlaces (
   primary key (postalCode, country)
 )
 ```
+
+### Tables Relationships - Foreign Keys
+Sometimes it's usefull to declare relationships constraints. For exemple, here's a table that list items in a store and another table that list sales of items:
+
+*Products*
+| ItemID | Price | Name         |
+|--------|-------|--------------|
+| 111    | 7$    | small object |
+| 222    | 36$   | big object   |
+
+*Sales*
+| ItemID | SalesDate  | Count |
+|--------|------------|-------|
+| 111    | 2017-07-22 | 3     |
+| 222    | 2017-07-21 | 1     |
+
+The *ItemID* in the *Sales* table should already exist in the *product* table because we can't sell something not in stock! I can constraints *Sales*' *ItemID* to already exist in the *Products* table with `REFERENCE tableName(colName)`. `(colName)` is not needed if it has the same name:
+
+```sql
+CREATE TABLE sales (
+  ItemID integer REFERENCE products, # or REFERENCE products(ItemID)
+  SalesDate date,
+  Count integer
+)
+```
+
+*Sales*' *ItemID* is called a **Foreign Key**. It references to another table's column, often a primary key.
+
+What happend if I delete an item in the product table taht break the reference ?
